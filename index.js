@@ -36,7 +36,7 @@ async function run() {
       res.send(services);
     });
 
-    app.post("/add-service", async (req, res) => {
+    app.post("/add-package", async (req, res) => {
       const newService = req.body;
       const result = await packageCollection.insertOne(newService);
       console.log(`A document was inserted with the _id: ${result.insertedId}`);
@@ -51,7 +51,7 @@ async function run() {
       // const query = { service: serviceName };
       const result = await packageCollection.findOne(query);
 
-      res.send(result);
+      // res.send(result);
     });
 
     app.put("/service/:id", async (req, res) => {
