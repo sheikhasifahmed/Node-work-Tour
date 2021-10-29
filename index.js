@@ -83,5 +83,30 @@ async function run() {
 }
 run().catch(console.dir);
 
+async function order() {
+  try {
+    await client.connect();
+    const database = client.db("tour");
+    const bookingsCollection = database.collection("bookings");
+    // create a document to insert
+
+    app.post("/place-order", async (req, res) => {
+      const booking = req.body;
+      const result = await bookingsCollection.insertOne(booking);
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
+      res.json(booking);
+    });
+
+    app.get("/bookings", async (req, res) => {
+      const cursor = bookingsCollection.find({});
+      const packages = await cursor.toArray();
+      res.send(packages);
+    });
+  } finally {
+    // await client.close();
+  }
+}
+order().catch(console.dir);
+
 // user:AssignmentUser
 // pass:2dGHzQ6jwI0rgWUP
