@@ -44,7 +44,7 @@ async function run() {
       console.log(newService);
     });
 
-    app.get("/service/:id", async (req, res) => {
+    app.get("/place-order/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       // const serviceName = req.params.serviceName;
