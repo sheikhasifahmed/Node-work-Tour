@@ -51,7 +51,7 @@ async function run() {
       // const query = { service: serviceName };
       const result = await packageCollection.findOne(query);
 
-      // res.send(result);
+      res.send(result);
     });
 
     app.put("/service/:id", async (req, res) => {
