@@ -26,33 +26,35 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     await client.connect();
-    const database = client.db("master");
-    const personsCollection = database.collection("persons");
+    const database = client.db("tour");
+    const packageCollection = database.collection("servicePackage");
     // create a document to insert
 
-    app.post("/users", async (req, res) => {
-      const newUser = req.body;
-      const result = await personsCollection.insertOne(newUser);
-      console.log(`A document was inserted with the _id: ${result.insertedId}`);
-      res.json(newUser);
-    });
-    app.get("/users", async (req, res) => {
-      const cursor = personsCollection.find({});
-      const users = await cursor.toArray();
-      res.send(users);
+    app.get("/services", async (req, res) => {
+      const cursor = packageCollection.find({});
+      const services = await cursor.toArray();
+      res.send(services);
     });
 
-    app.get("/users/:id", async (req, res) => {
+    app.post("/add-service", async (req, res) => {
+      const newService = req.body;
+      const result = await packageCollection.insertOne(newService);
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
+      res.json(newService);
+      console.log(newService);
+    });
+
+    app.get("/service/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
       // const serviceName = req.params.serviceName;
       // const query = { service: serviceName };
-      const result = await personsCollection.findOne(query);
+      const result = await packageCollection.findOne(query);
 
       res.send(result);
     });
 
-    app.put("/users/:id", async (req, res) => {
+    app.put("/service/:id", async (req, res) => {
       const id = req.params.id;
       const updatedUser = req.body;
       const filter = { _id: ObjectId(id) };
@@ -60,7 +62,7 @@ async function run() {
       const updateDoc = {
         $set: { name: updatedUser.name, email: updatedUser.email },
       };
-      const result = await personsCollection.updateOne(
+      const result = await packageCollection.updateOne(
         filter,
         updateDoc,
         options
@@ -68,10 +70,10 @@ async function run() {
       res.json(result);
     });
 
-    app.delete("/users/:id", async (req, res) => {
+    app.delete("/service/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: ObjectId(id) };
-      const result = await personsCollection.deleteOne(query);
+      const result = await packageCollection.deleteOne(query);
       console.log(result);
       res.json(result);
     });
