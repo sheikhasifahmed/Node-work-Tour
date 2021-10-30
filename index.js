@@ -102,6 +102,32 @@ async function order() {
       const packages = await cursor.toArray();
       res.send(packages);
     });
+
+    app.put("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const update = req.body;
+      console.log(update);
+      const filter = { _id: ObjectId(id) };
+      const options = { upsert: true };
+      const updateDoc = {
+        $set: { status: update.status },
+      };
+      const result = await bookingsCollection.updateOne(
+        filter,
+        updateDoc,
+        options
+      );
+      console.log(result);
+      res.json(result);
+    });
+
+    app.delete("/bookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: ObjectId(id) };
+      const result = await bookingsCollection.deleteOne(query);
+      console.log(result);
+      res.json(result);
+    });
   } finally {
     // await client.close();
   }
