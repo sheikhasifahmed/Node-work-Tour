@@ -103,6 +103,18 @@ async function order() {
       res.send(packages);
     });
 
+    app.get("/my-bookings/:user", async (req, res) => {
+      const user = req.params.user;
+      console.log(user);
+      const query = { userEmail: user };
+      console.log(query);
+      const cursor = bookingsCollection.find(query);
+      // console.log(cursor);
+      const bookings = await cursor.toArray();
+      console.log(bookings);
+      res.send(bookings);
+    });
+
     app.put("/bookings/:id", async (req, res) => {
       const id = req.params.id;
       const update = req.body;
