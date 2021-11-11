@@ -146,5 +146,71 @@ async function order() {
 }
 order().catch(console.dir);
 
+async function rate() {
+  try {
+    await client.connect();
+    const database = client.db("tour");
+    const ratingsCollection = database.collection("ratings");
+    // create a document to insert
+
+    app.post("/rating", async (req, res) => {
+      const rating = req.body;
+      const result = await ratingsCollection.insertOne(rating);
+      console.log(`A document was inserted with the _id: ${result.insertedId}`);
+      res.json(rating);
+    });
+
+    app.get("/rating/:user", async (req, res) => {
+      const user = req.params.user;
+      console.log(user);
+      const query = { userEmail: user };
+      const cursor = ratingsCollection.find(query);
+      const rating = await cursor.toArray();
+      res.send(rating);
+    });
+
+    // app.get("/my-bookings/:user", async (req, res) => {
+    //   const user = req.params.user;
+    //   console.log(user);
+    //   const query = { userEmail: user };
+    //   console.log(query);
+    //   const cursor = bookingsCollection.find(query);
+    //   // console.log(cursor);
+    //   const bookings = await cursor.toArray();
+    //   console.log(bookings);
+    //   res.send(bookings);
+    // });
+
+    // app.put("/bookings/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const update = req.body;
+    //   console.log(update);
+    //   const filter = { _id: ObjectId(id) };
+    //   const options = { upsert: true };
+    //   const updateDoc = {
+    //     $set: { status: update.status },
+    //   };
+    //   const result = await bookingsCollection.updateOne(
+    //     filter,
+    //     updateDoc,
+    //     options
+    //   );
+    //   console.log(result);
+    //   res.json(result);
+    // });
+
+    // app.delete("/bookings/:id", async (req, res) => {
+    //   const id = req.params.id;
+    //   const query = { _id: ObjectId(id) };
+    //   const result = await bookingsCollection.deleteOne(query);
+    //   console.log(result);
+    //   res.json(result);
+    // });
+  } finally {
+    // await client.close();
+  }
+}
+rate().catch(console.dir);
+
 // user:AssignmentUser
 // pass:2dGHzQ6jwI0rgWUP
